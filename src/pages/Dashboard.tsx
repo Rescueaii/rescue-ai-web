@@ -6,11 +6,12 @@ import { Footer } from '@/components/layout/Footer';
 import { StatsPanel } from '@/components/dashboard/StatsPanel';
 import { CaseCard } from '@/components/dashboard/CaseCard';
 import { CaseDetail } from '@/components/dashboard/CaseDetail';
+import { MapPanel } from '@/components/dashboard/MapPanel';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Inbox } from 'lucide-react';
+import { RefreshCw, Inbox, LayoutDashboard, Map as MapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Dashboard = () => {
@@ -69,6 +70,7 @@ const Dashboard = () => {
     if (error) {
       console.error('Error fetching cases:', error);
     } else {
+      console.log('Dashboard: Fetched cases:', data?.length);
       setCases(data || []);
     }
     setLoading(false);
@@ -87,64 +89,61 @@ const Dashboard = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 container px-4 py-4 flex flex-col">
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold">Operations Dashboard</h1>
-              <p className="text-sm text-muted-foreground">
-                Real-time emergency case management
-              </p>
-            </div>
+      <main className="flex-1 container px-4 py-4 flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Operations Dashboard</h1>
+            <p className="text-sm text-muted-foreground">
+              Real-time emergency situational awareness
+            </p>
+          </div>
+          <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={fetchCases}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
           </div>
-
-          <StatsPanel cases={cases} />
         </div>
 
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
-          {/* Cases List */}
-          <Card className="flex flex-col min-h-0">
-            <CardHeader className="pb-2">
+        <StatsPanel cases={cases} />
+
+        <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-4 min-h-0">
+          {/* Left Column: Cases List (4/12) */}
+          <Card className="xl:col-span-4 flex flex-col h-[700px] xl:h-[800px] bg-background/50 backdrop-blur-sm border-primary/10 overflow-hidden">
+            <CardHeader className="pb-2 border-b">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Cases</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Inbox className="h-5 w-5 text-primary" />
+                  Incidents
+                </CardTitle>
                 <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
                   <TabsList className="h-8">
-                    <TabsTrigger value="active" className="text-xs px-3">
+                    <TabsTrigger value="active" className="text-xs px-2">
                       Active
-                      <Badge variant="secondary" className="ml-1.5 h-5 px-1.5">
+                      <Badge variant="secondary" className="ml-1.5 h-4 px-1">
                         {activeCasesCount}
                       </Badge>
                     </TabsTrigger>
-                    <TabsTrigger value="resolved" className="text-xs px-3">
+                    <TabsTrigger value="resolved" className="text-xs px-2">
                       Resolved
-                      <Badge variant="secondary" className="ml-1.5 h-5 px-1.5">
-                        {resolvedCasesCount}
-                      </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="all" className="text-xs px-3">
-                      All
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
             </CardHeader>
-            <CardContent className="flex-1 min-h-0 pb-4">
-              <ScrollArea className="h-full pr-4">
+            <CardContent className="flex-1 min-h-0 p-3">
+              <ScrollArea className="h-[calc(100vh-450px)] xl:h-full">
                 {loading ? (
                   <div className="flex items-center justify-center h-32">
-                    <span className="text-muted-foreground">Loading cases...</span>
+                    <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
                   </div>
                 ) : filteredCases.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-32 text-center">
-                    <Inbox className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-muted-foreground">No cases found</p>
+                  <div className="flex flex-col items-center justify-center h-32 text-center opacity-50">
+                    <Inbox className="h-8 w-8 mb-2" />
+                    <p className="text-sm">No cases found</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {filteredCases.map((c) => (
                       <CaseCard
                         key={c.id}
@@ -159,21 +158,31 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Case Detail */}
-          <div className="flex flex-col min-h-0">
-            {selectedCase ? (
-              <CaseDetail caseData={selectedCase} onUpdate={fetchCases} />
-            ) : (
-              <Card className="flex-1 flex items-center justify-center">
-                <div className="text-center">
-                  <Inbox className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                  <h3 className="font-semibold mb-1">Select a Case</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Click on a case to view details and manage it
-                  </p>
-                </div>
-              </Card>
-            )}
+          {/* Right Column: Map & Detail (8/12) */}
+          <div className="xl:col-span-8 flex flex-col gap-4 min-h-0">
+            {/* Top: Map */}
+            <div className="h-[400px] shrink-0">
+              <MapPanel 
+                cases={cases} 
+                selectedCaseId={selectedCase?.id} 
+                onCaseSelect={setSelectedCase}
+              />
+            </div>
+
+            {/* Bottom: Detail */}
+            <div className="flex-1 min-h-0">
+              {selectedCase ? (
+                <CaseDetail caseData={selectedCase} onUpdate={fetchCases} />
+              ) : (
+                <Card className="h-full flex items-center justify-center border-dashed border-2 bg-muted/5">
+                  <div className="text-center opacity-50">
+                    <LayoutDashboard className="h-12 w-12 mx-auto mb-3" />
+                    <h3 className="font-semibold">Incident Command View</h3>
+                    <p className="text-sm">Select an incident from the map or list to begin triage</p>
+                  </div>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
       </main>

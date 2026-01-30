@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send, Loader2 } from 'lucide-react';
@@ -22,9 +22,9 @@ export function ChatInput({ onSend, placeholder, disabled, language }: ChatInput
     }
   };
 
-  const handleVoiceTranscription = (text: string) => {
+  const handleVoiceTranscription = useCallback((text: string) => {
     setMessage(text);
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">

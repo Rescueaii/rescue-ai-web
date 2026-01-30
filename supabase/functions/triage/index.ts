@@ -19,7 +19,7 @@ serve(async (req) => {
   }
 
   try {
-    const { caseId, message, language, location, conversationHistory } = await req.json();
+    const { caseId, message, language, location, conversationHistory, coords, latitude, longitude, location_source } = await req.json();
 
     if (!caseId || !message) {
       return new Response(
@@ -29,8 +29,15 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+
+    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({ 
+          error: "AI API Key is missing. Please set LOVABLE_API_KEY or OPENAI_API_KEY in your Supabase project secrets." 
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -97,35 +104,50 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
       messages.push({ role: "user", content: message });
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages,
-        temperature: 0.3,
-      }),
-    });
+    let response;
+    if (LOVABLE_API_KEY) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages,
+          temperature: 0.3,
+        }),
+      });
+    } else {
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages,
+          temperature: 0.3,
+        }),
+      });
+    }
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("AI gateway error:", response.status, errorText);
+
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Rate limit exceeded, please try again later." }),
+          JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Payment required." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error("AI gateway error");
+      
+      return new Response(
+        JSON.stringify({ error: `AI service failed (${response.status}). ${errorText}` }),
+        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const aiData = await response.json();
@@ -154,6 +176,7 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
           actions: parsed.actions || [],
           questions: parsed.questions || [],
           escalationNeeded: parsed.escalationNeeded || false,
+          ...(coords ? { coords } : {}),
         };
       }
 
@@ -171,6 +194,22 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
     }
 
     // Update case with triage data
+    // Fetch existing triage_data to preserve coords if necessary
+    const { data: existingCase } = await supabase
+      .from("cases")
+      .select("triage_data")
+      .eq("id", caseId)
+      .single();
+
+    const existingTriageData = existingCase?.triage_data as any;
+    const finalTriageData = {
+      ...triageData,
+      // Priority: use new coords if provided, otherwise preserve existing ones
+      coords: coords || existingTriageData?.coords || null
+    };
+
+    console.log(`Case ${caseId}: Final triage data with coords:`, finalTriageData.coords);
+
     const { error: updateError } = await supabase
       .from("cases")
       .update({
@@ -179,7 +218,11 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
         category: triageData.category,
         escalation_needed: triageData.escalationNeeded,
         last_message: message.substring(0, 500),
-        triage_data: triageData,
+        location_text: location || null,
+        latitude: latitude || coords?.lat || null,
+        longitude: longitude || coords?.lng || null,
+        location_source: location_source || 'fallback',
+        triage_data: finalTriageData,
       })
       .eq("id", caseId);
 

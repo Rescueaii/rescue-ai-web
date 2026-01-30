@@ -30,6 +30,10 @@ export interface Case {
   assigned_to: string | null;
   last_message: string | null;
   triage_data: Json | null;
+  location_text: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  location_source: 'gps' | 'manual' | 'fallback' | null;
   created_at: string;
   updated_at: string;
 }

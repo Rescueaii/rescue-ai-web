@@ -6,46 +6,46 @@
 
 @layer base {
   :root {
-    /* Core colors - Clean white background for clarity */
-    --background: 210 20% 98%;
-    --foreground: 222 47% 11%;
+    /* Core colors - Premium Command Center Dark Mode */
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
 
     /* Card surfaces */
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 98%;
 
     /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Primary - Deep blue for trust and reliability */
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Vibrant blue for visibility */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
 
     /* Secondary */
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
     /* Muted */
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
     /* Accent */
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
-    /* Priority Colors */
+    /* Priority Colors - Brighter for dark background */
     --priority-p1: 0 84% 60%;
     --priority-p1-foreground: 0 0% 100%;
     --priority-p2: 25 95% 53%;
     --priority-p2-foreground: 0 0% 100%;
-    --priority-p3: 45 93% 47%;
+    --priority-p3: 47 95% 60%;
     --priority-p3-foreground: 222 47% 11%;
     --priority-p4: 142 71% 45%;
     --priority-p4-foreground: 0 0% 100%;
 
     /* Status Colors */
-    --status-active: 221 83% 53%;
+    --status-active: 217.2 91.2% 59.8%;
     --status-assigned: 25 95% 53%;
     --status-resolved: 142 71% 45%;
 
@@ -59,67 +59,23 @@
     --emergency-mental: 262 83% 58%;
 
     /* Destructive */
-    --destructive: 0 84% 60%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
     /* Border and input */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
 
     --radius: 0.75rem;
 
     /* Chat bubble colors */
-    --chat-user: 221 83% 53%;
-    --chat-user-foreground: 0 0% 100%;
-    --chat-assistant: 210 40% 96%;
-    --chat-assistant-foreground: 222 47% 11%;
-
-    /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 221 83% 53%;
-
-    --chat-user: 221 83% 53%;
-    --chat-user-foreground: 0 0% 100%;
-    --chat-assistant: 217 33% 17%;
+    --chat-user: 217.2 91.2% 59.8%;
+    --chat-user-foreground: 222.2 47.4% 11.2%;
+    --chat-assistant: 217.2 32.6% 17.5%;
     --chat-assistant-foreground: 210 40% 98%;
 
+    /* Sidebar */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -128,6 +84,41 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --chat-user: 221 83% 53%;
+    --chat-user-foreground: 0 0% 100%;
+    --chat-assistant: 210 40% 96%;
+    --chat-assistant-foreground: 222 47% 11%;
   }
 }
 
@@ -139,6 +130,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-image: radial-gradient(at 0% 0%, hsla(217, 91%, 60%, 0.05) 0, transparent 50%),
+                      radial-gradient(at 100% 0%, hsla(0, 84%, 60%, 0.05) 0, transparent 50%);
+    background-attachment: fixed;
   }
 }
 
@@ -178,15 +172,17 @@
 
   /* Pulse animation for critical alerts */
   .pulse-critical {
-    animation: pulse-critical 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse-critical 1.5s ease-in-out infinite;
   }
 
   @keyframes pulse-critical {
     0%, 100% {
-      box-shadow: 0 0 0 0 hsl(var(--priority-p1) / 0.4);
+      box-shadow: 0 0 0 0 hsl(var(--priority-p1) / 0.6);
+      border-color: hsl(var(--priority-p1) / 1);
     }
     50% {
-      box-shadow: 0 0 0 8px hsl(var(--priority-p1) / 0);
+      box-shadow: 0 0 0 12px hsl(var(--priority-p1) / 0);
+      border-color: hsl(var(--priority-p1) / 0.3);
     }
   }
 
@@ -212,6 +208,44 @@
   /* Case card hover effect */
   .case-card {
     @apply transition-all duration-200 hover:shadow-lg hover:border-primary/30;
+  }
+
+  /* Leaflet Overrides */
+  .leaflet-container {
+    @apply font-sans;
+  }
+
+  .leaflet-popup-content-wrapper {
+    @apply bg-card text-card-foreground border border-border shadow-xl rounded-lg p-0 overflow-hidden;
+  }
+
+  .leaflet-popup-content {
+    @apply m-0 p-0 !important;
+  }
+
+  .leaflet-popup-tip {
+    @apply bg-card border-border;
+  }
+
+  .custom-popup .leaflet-popup-content-wrapper {
+    min-width: 250px;
+  }
+
+  /* Marker pulse animation */
+  .marker-pulse {
+    animation: marker-pulse 2s infinite;
+  }
+
+  @keyframes marker-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
   }
 }
 

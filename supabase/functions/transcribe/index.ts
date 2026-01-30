@@ -23,8 +23,15 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+
+    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({ 
+          error: "AI API Key is missing. Please set LOVABLE_API_KEY or OPENAI_API_KEY in your Supabase project secrets." 
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Map language codes to Whisper language codes
@@ -47,24 +54,40 @@ serve(async (req) => {
     whisperFormData.append("model", "whisper-1");
     whisperFormData.append("language", whisperLanguage);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-      },
-      body: whisperFormData,
-    });
+    let response;
+    if (LOVABLE_API_KEY) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        },
+        body: whisperFormData,
+      });
+    } else {
+      response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+        body: whisperFormData,
+      });
+    }
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Transcription error:", response.status, errorText);
+      
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Rate limit exceeded" }),
+          JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      const errorText = await response.text();
-      console.error("Transcription error:", response.status, errorText);
-      throw new Error("Transcription failed");
+      
+      return new Response(
+        JSON.stringify({ error: `Transcription API failed (${response.status}). ${errorText}` }),
+        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const data = await response.json();

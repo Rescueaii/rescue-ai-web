@@ -40,16 +40,16 @@ export function CaseCard({ caseData, onClick, isSelected }: CaseCardProps) {
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-2">
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <span className="capitalize font-medium text-foreground">{caseData.category}</span>
-            <span>•</span>
-            <span className="uppercase text-xs">{caseData.language}</span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="capitalize font-bold text-foreground tracking-tight">{caseData.category}</span>
+            <span className="opacity-40">•</span>
+            <span className="font-medium bg-muted px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wide">{caseData.language}</span>
           </div>
           
           {caseData.location && (
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5" />
-              <span className="truncate">{caseData.location}</span>
+            <div className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              <span className="line-clamp-2">{caseData.location}</span>
             </div>
           )}
 
@@ -61,7 +61,7 @@ export function CaseCard({ caseData, onClick, isSelected }: CaseCardProps) {
           )}
 
           {caseData.last_message && (
-            <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
+            <p className="text-xs text-muted-foreground/80 line-clamp-2 mt-2 italic leading-relaxed">
               "{caseData.last_message}"
             </p>
           )}
