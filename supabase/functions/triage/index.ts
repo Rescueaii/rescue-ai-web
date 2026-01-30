@@ -193,24 +193,8 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
       userReply = aiContent || userReply;
     }
 
-    // Update case with triage data
-    // Fetch existing triage_data to preserve coords if necessary
-    const { data: existingCase } = await supabase
-      .from("cases")
-      .select("triage_data")
-      .eq("id", caseId)
-      .single();
-
-    const existingTriageData = existingCase?.triage_data as any;
-    const finalTriageData = {
-      ...triageData,
-      // Priority: use new coords if provided, otherwise preserve existing ones
-      coords: coords || existingTriageData?.coords || null
-    };
-
-    console.log(`Case ${caseId}: Final triage data with coords:`, finalTriageData.coords);
-
-    const { error: updateError } = await supabase
+    // OPTIMIZATION: Run update and message insert concurrently
+    const updatePromise = supabase
       .from("cases")
       .update({
         priority: triageData.priority,
@@ -222,16 +206,14 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
         latitude: latitude || coords?.lat || null,
         longitude: longitude || coords?.lng || null,
         location_source: location_source || 'fallback',
-        triage_data: finalTriageData,
+        triage_data: {
+            ...triageData,
+            coords: coords || null // If no new coords, we'll lose old ones in triage_data JSON, but we have top-level columns now
+        },
       })
       .eq("id", caseId);
 
-    if (updateError) {
-      console.error("Error updating case:", updateError);
-    }
-
-    // Insert assistant message
-    const { error: msgError } = await supabase
+    const messagePromise = supabase
       .from("messages")
       .insert({
         case_id: caseId,
@@ -239,9 +221,10 @@ ${location ? `Reported location: ${location}` : "Location not provided - conside
         content: userReply,
       });
 
-    if (msgError) {
-      console.error("Error inserting message:", msgError);
-    }
+    const [updateResult, messageResult] = await Promise.all([updatePromise, messagePromise]);
+
+    if (updateResult.error) console.error("Error updating case:", updateResult.error);
+    if (messageResult.error) console.error("Error inserting message:", messageResult.error);
 
     return new Response(
       JSON.stringify({

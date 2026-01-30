@@ -1,4 +1,4 @@
-// Case and message types for RescueAI
+// Case and message types for RakshAI
 import { Json } from '@/integrations/supabase/types';
 
 export type CasePriority = 'P1' | 'P2' | 'P3' | 'P4';
@@ -149,7 +149,7 @@ export const UI_TRANSLATIONS: Record<SupportedLanguage, {
   disclaimer: string;
 }> = {
   en: {
-    title: 'RescueAI',
+    title: 'RakshAI',
     subtitle: 'Emergency Support',
     locationPlaceholder: 'Enter your location (area, landmark)',
     messagePlaceholder: 'Describe your emergency...',
@@ -161,7 +161,7 @@ export const UI_TRANSLATIONS: Record<SupportedLanguage, {
     disclaimer: 'This is an AI assistant. For life-threatening emergencies, also call local emergency services.',
   },
   hi: {
-    title: 'RescueAI',
+    title: 'RakshAI',
     subtitle: 'आपातकालीन सहायता',
     locationPlaceholder: 'अपना स्थान दर्ज करें (क्षेत्र, लैंडमार्क)',
     messagePlaceholder: 'अपनी आपात स्थिति का वर्णन करें...',
@@ -173,7 +173,7 @@ export const UI_TRANSLATIONS: Record<SupportedLanguage, {
     disclaimer: 'यह एक AI सहायक है। जानलेवा आपात स्थिति के लिए, स्थानीय आपातकालीन सेवाओं को भी कॉल करें।',
   },
   te: {
-    title: 'RescueAI',
+    title: 'RakshAI',
     subtitle: 'అత్యవసర సహాయం',
     locationPlaceholder: 'మీ స్థానాన్ని నమోదు చేయండి (ప్రాంతం, ల్యాండ్‌మార్క్)',
     messagePlaceholder: 'మీ అత్యవసర పరిస్థితిని వివరించండి...',
