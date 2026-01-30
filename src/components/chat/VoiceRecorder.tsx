@@ -12,7 +12,7 @@ interface VoiceRecorderProps {
 }
 
 export function VoiceRecorder({ onTranscription, disabled, language }: VoiceRecorderProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isManualListening, setIsManualListening] = useState(false);
   
   // Map language codes to BCP 47 tags
   const languageMap: Record<string, string> = {
@@ -30,41 +30,45 @@ export function VoiceRecorder({ onTranscription, disabled, language }: VoiceReco
     isMicrophoneAvailable
   } = useSpeechRecognition();
 
+  // Sync manual state with hook state occasionally, but let manual override for toggle
+  useEffect(() => {
+    if (listening) setIsManualListening(true);
+    else setIsManualListening(false);
+  }, [listening]);
+
   // Debugging logs for Vercel
   useEffect(() => {
-    console.log('VoiceRecorder State:', { 
+    console.log('VoiceRecorder Engine Status:', { 
       browserSupportsSpeechRecognition, 
       isMicrophoneAvailable, 
       listening,
-      language,
-      mappedLanguage: languageMap[language]
+      isManualListening,
+      language
     });
-  }, [browserSupportsSpeechRecognition, isMicrophoneAvailable, listening, language]);
+  }, [browserSupportsSpeechRecognition, isMicrophoneAvailable, listening, isManualListening, language]);
 
   // Update transcription as it comes in
   useEffect(() => {
-    if (listening && transcript) {
-      console.log('Transcript update:', transcript);
+    if (transcript) {
+      console.log('Transcript received:', transcript);
       onTranscription(transcript);
     }
-  }, [transcript, listening, onTranscription]);
+  }, [transcript, onTranscription]);
 
   if (!browserSupportsSpeechRecognition) {
     console.warn('Speech recognition not supported in this browser.');
-    return null; // Don't show the button if not supported
+    return null;
   }
 
   const toggleRecording = async () => {
     try {
-      if (listening) {
-        console.log('Stopping speech recognition...');
+      if (isManualListening || listening) {
+        console.log('Forcing stop...');
         await SpeechRecognition.stopListening();
-        toast.success("Voice recognized");
+        setIsManualListening(false);
+        toast.success("Stopped listening");
       } else {
-        console.log('Starting speech recognition...', { 
-          language: languageMap[language], 
-          isMicrophoneAvailable 
-        });
+        console.log('Requesting start...');
         
         if (!isMicrophoneAvailable) {
           toast.error("Microphone access is required");
@@ -72,6 +76,8 @@ export function VoiceRecorder({ onTranscription, disabled, language }: VoiceReco
         }
         
         resetTranscript();
+        setIsManualListening(true);
+        
         await SpeechRecognition.startListening({ 
           continuous: true, 
           language: languageMap[language] || 'en-US' 
@@ -80,34 +86,32 @@ export function VoiceRecorder({ onTranscription, disabled, language }: VoiceReco
       }
     } catch (error) {
       console.error('Speech Recognition Error:', error);
-      toast.error("Could not start voice recognition.");
+      setIsManualListening(false);
+      toast.error("Voice recognition failed to start.");
     }
   };
+
+  const active = isManualListening || listening;
 
   return (
     <Button
       type="button"
-      variant={listening ? 'destructive' : 'outline'}
+      variant={active ? 'destructive' : 'outline'}
       size="icon"
       onClick={toggleRecording}
-      disabled={disabled || isProcessing}
+      disabled={disabled}
       className={cn(
         'shrink-0 transition-all duration-200',
-        listening && 'animate-pulse ring-2 ring-destructive ring-offset-2'
+        active && 'animate-pulse ring-2 ring-destructive ring-offset-2'
       )}
-      title={listening ? "Stop recording" : "Start voice recording"}
+      title={active ? "Stop recording" : "Start voice recording"}
     >
-      {listening ? (
-        <>
-           <MicOff className="h-4 w-4" />
-           <span className="sr-only">Stop</span>
-        </>
+      {active ? (
+        <MicOff className="h-4 w-4" />
       ) : (
-        <>
-           <Mic className="h-4 w-4" />
-           <span className="sr-only">Start</span>
-        </>
+        <Mic className="h-4 w-4" />
       )}
+      <span className="sr-only">{active ? 'Stop' : 'Start'}</span>
     </Button>
   );
 }
