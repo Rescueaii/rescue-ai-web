@@ -50,8 +50,11 @@ const getCoords = (c: Case): [number, number] => {
     return [lat + latJitter, lng + lngJitter];
   }
 
-  // Absolute fallback: null (do not show marker if no location is known)
-  return null;
+  // Absolute fallback: Visual center of India (so markers aren't hidden but labeled "fallback")
+  const hash = c.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const lat = 20.5937 + (hash % 100) / 1000;
+  const lng = 78.9629 + ((hash * 17) % 100) / 1000;
+  return [lat, lng];
 };
 
 function ChangeView({ center, animate }: { center: [number, number]; animate: boolean }) {

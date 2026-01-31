@@ -104,7 +104,7 @@ const Index = () => {
     console.log('Geocoding location string:', locStr);
     
     const tryGeocode = async (query: string) => {
-      // Append ", India" if not already present to narrow down results
+      // Append ", India" if not already present
       const searchQuery = query.toLowerCase().includes('india') ? query : `${query}, India`;
       try {
         const resp = await fetch(
@@ -136,6 +136,13 @@ const Index = () => {
       if (!result && parts.length > 0) {
         result = await tryGeocode(parts[0]);
       }
+    }
+
+    // FINAL FALLBACK: If "Nagpur" is mentioned anywhere but geocoding fails, 
+    // at least place them in Central Nagpur so they are visible.
+    if (!result && locStr.toLowerCase().includes('nagpur')) {
+      console.log("Geocoding failed but Nagpur detected. Placing in city center.");
+      result = { lat: 21.1458, lng: 79.0882 };
     }
 
     if (result) {
