@@ -16,10 +16,8 @@ export function VoiceRecorder({ onTranscription, disabled, language }: VoiceReco
   
   // Map language codes to BCP 47 tags
   const languageMap: Record<string, string> = {
-    en: 'en-US',
-    hi: 'hi-IN',
-    te: 'te-IN',
-    ta: 'ta-IN'
+    ta: 'ta-IN',
+    mr: 'mr-IN'
   };
 
   const {

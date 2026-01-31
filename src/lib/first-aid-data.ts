@@ -33,6 +33,17 @@ export const FIRST_AID_DATA: Record<string, FirstAidGuide[]> = {
         { title: "Elevate", description: "If possible, keep the wounded area above the heart." },
         { title: "Tourniquet", description: "As a last resort for limbs, tie a cloth tightly above the wound." }
       ]
+    },
+    {
+      id: "burns",
+      icon: "Flame",
+      title: "Burns",
+      steps: [
+        { title: "Cool the Burn", description: "Run cool (not cold) tap water over the burn for 10-20 minutes." },
+        { title: "Remove Jewelry", description: "Gently remove rings or tight items before the area swells." },
+        { title: "Cover Loosely", description: "Use a sterile bandage or clean plastic wrap. Do not apply butter or ointments." },
+        { title: "Seek Help", description: "Call help if the burn is large, deep, or on the face." }
+      ]
     }
   ],
   hi: [
@@ -54,6 +65,15 @@ export const FIRST_AID_DATA: Record<string, FirstAidGuide[]> = {
         { title: "दबाव डालें", description: "घाव पर एक साफ कपड़ा या पट्टी जोर से दबाएं।" },
         { title: "दबाव बनाए रखें", description: "कपड़ा हटाकर जाँच न करें। अगर भीग जाए तो और परतें जोड़ें।" }
       ]
+    },
+    {
+      id: "burns",
+      icon: "Flame",
+      title: "जलना (झुलसना)",
+      steps: [
+        { title: "ठंडा करें", description: "जली हुई जगह पर 10-20 मिनट तक ठंडा नल का पानी डालें।" },
+        { title: "ढीला ढकें", description: "साफ पट्टी या प्लास्टिक रैप का उपयोग करें। मक्खन या मलहम न लगाएं।" }
+      ]
     }
   ],
   te: [
@@ -73,6 +93,14 @@ export const FIRST_AID_DATA: Record<string, FirstAidGuide[]> = {
       steps: [
         { title: "ఒత్తిడిని కలిగించండి", description: "గాయంపై శుభ్రమైన గుడ్డ లేదా బ్యాండేజీని గట్టిగా నొక్కండి." }
       ]
+    },
+    {
+      id: "burns",
+      icon: "Flame",
+      title: "కాలిన గాయాలు",
+      steps: [
+        { title: "చల్లబరచండి", description: "కాలిన చోట 10-20 నిమిషాల పాటు చల్లని నీటిని పోయండి." }
+      ]
     }
   ],
   ta: [
@@ -91,6 +119,45 @@ export const FIRST_AID_DATA: Record<string, FirstAidGuide[]> = {
       title: "கடுமையான இரத்தப்போக்கு",
       steps: [
         { title: "அழுத்தம் கொடுக்கவும்", description: "காயத்தின் மீது சுத்தமான துணி அல்லது கட்டை வைத்து பலமாக அழுத்தவும்." }
+      ]
+    },
+    {
+      id: "burns",
+      icon: "Flame",
+      title: "தீக்காயங்கள்",
+      steps: [
+        { title: "குளிர்விக்கவும்", description: "தீக்காயத்தின் மேல் 10-20 நிமிடங்கள் குளிர்ந்த நீரை ஊற்றவும்." }
+      ]
+    }
+  ],
+  mr: [
+    {
+      id: "cpr",
+      icon: "HeartPulse",
+      title: "CPR (प्रौढ)",
+      steps: [
+        { title: "परिसर तपासा", description: "तुमच्यासाठी आणि पीडितेसाठी परिसर सुरक्षित असल्याची खात्री करा." },
+        { title: "प्रतिसाद तपासा", description: "खांद्यावर थाप द्या आणि ओरडा. प्रतिसाद नसल्यास, आपत्कालीन सेवांना कॉल करा." },
+        { title: "चेस्ट कॉम्प्रेशन", description: "छातीच्या मध्यभागी जोरात आणि वेगाने दाबा (१००-१२० प्रति मिनिट)." }
+      ]
+    },
+    {
+      id: "bleeding",
+      icon: "Droplets",
+      title: "गंभीर रक्तस्त्राव",
+      steps: [
+        { title: "दाब द्या", description: "जखमेवर स्वच्छ कापड किंवा पट्टीने जोरात दाब द्या." },
+        { title: "दाब कायम ठेवा", description: "तपासण्यासाठी कापड उचलू नका. भिजल्यास आणखी थर जोडा." }
+      ]
+    },
+    {
+      id: "burns",
+      icon: "Flame",
+      title: "भाजणे",
+      steps: [
+        { title: "थंड करा", description: "भाजलेल्या जागी १०-२० मिनिटे थंड नळाचे पाणी सोडा." },
+        { title: "दागिने काढा", description: "सूज येण्यापूर्वी अंगठ्या किंवा घट्ट वस्तू हळूवारपणे काढा." },
+        { title: "सैल झाकून ठेवा", description: "स्वच्छ कापड किंवा प्लास्टिक रॅप वापरा. लोणी किंवा मलम लावू नका." }
       ]
     }
   ]

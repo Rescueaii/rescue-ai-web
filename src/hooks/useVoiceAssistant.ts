@@ -10,6 +10,7 @@ export const useVoiceAssistant = () => {
     hi: ['hi-IN'],
     te: ['te-IN'],
     ta: ['ta-IN'],
+    mr: ['mr-IN'],
   };
 
   const speak = useCallback((text: string, lang: string) => {

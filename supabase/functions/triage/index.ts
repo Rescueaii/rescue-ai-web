@@ -11,6 +11,7 @@ const LANGUAGE_MAP: Record<string, string> = {
   hi: "Hindi",
   te: "Telugu",
   ta: "Tamil",
+  mr: "Marathi",
 };
 
 serve(async (req) => {
